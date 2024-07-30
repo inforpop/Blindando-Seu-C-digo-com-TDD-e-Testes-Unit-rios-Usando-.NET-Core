@@ -1,0 +1,125 @@
+Blindar seu código com TDD (Desenvolvimento Orientado por Testes) e testes unitários é uma prática eficaz para garantir a qualidade e a confiabilidade do software. No .NET Core, essa abordagem pode ser implementada utilizando frameworks de teste como xUnit, NUnit ou MSTest. Aqui, vamos abordar como fazer isso com xUnit.
+
+### Passos para Implementar TDD com .NET Core
+
+1. **Configurar o Ambiente de Desenvolvimento:**
+   - Instale o SDK do .NET Core.
+   - Configure o seu editor de código preferido, como Visual Studio ou Visual Studio Code.
+
+2. **Criar um Projeto e um Projeto de Teste:**
+   - Crie um projeto principal:
+     ```bash
+     dotnet new console -n MeuProjeto
+     cd MeuProjeto
+     ```
+   - Crie um projeto de teste:
+     ```bash
+     dotnet new xunit -n MeuProjeto.Tests
+     cd ..
+     ```
+
+3. **Adicionar Referências:**
+   - Adicione uma referência do projeto de teste ao projeto principal:
+     ```bash
+     dotnet add MeuProjeto.Tests/MeuProjeto.Tests.csproj reference MeuProjeto/MeuProjeto.csproj
+     ```
+
+### Exemplo Prático: Calculadora com TDD
+
+#### Passo 1: Escreva o Teste Primeiro
+
+1. **Crie um teste falho:**
+   Crie uma classe de teste no projeto `MeuProjeto.Tests`:
+   ```csharp
+   using Xunit;
+
+   public class CalculadoraTests
+   {
+       [Fact]
+       public void Somar_DeveRetornarSomaCorreta()
+       {
+           // Arrange
+           var calculadora = new Calculadora();
+           
+           // Act
+           int resultado = calculadora.Somar(2, 3);
+
+           // Assert
+           Assert.Equal(5, resultado);
+       }
+   }
+   ```
+
+2. **Compile e rode os testes:**
+   No terminal, execute:
+   ```bash
+   dotnet test
+   ```
+   Esse teste falhará porque a classe `Calculadora` e o método `Somar` ainda não existem.
+
+#### Passo 2: Escreva o Código para Passar o Teste
+
+1. **Implemente a classe e o método:**
+   No projeto `MeuProjeto`, crie a classe `Calculadora`:
+   ```csharp
+   public class Calculadora
+   {
+       public int Somar(int a, int b)
+       {
+           return a + b;
+       }
+   }
+   ```
+
+2. **Compile e rode os testes novamente:**
+   ```bash
+   dotnet test
+   ```
+   Agora o teste deve passar.
+
+#### Passo 3: Refatore o Código
+
+- **Melhore a implementação se necessário, garantindo que todos os testes ainda passem.**
+
+### Adicionando Mais Testes
+
+Para cobrir mais casos, você pode adicionar testes usando `[Theory]` e `[InlineData]`:
+
+```csharp
+public class CalculadoraTests
+{
+    [Theory]
+    [InlineData(1, 1, 2)]
+    [InlineData(2, 3, 5)]
+    [InlineData(-1, -1, -2)]
+    public void Somar_DeveRetornarSomaCorreta_ParaMultiplosValores(int a, int b, int esperado)
+    {
+        // Arrange
+        var calculadora = new Calculadora();
+        
+        // Act
+        int resultado = calculadora.Somar(a, b);
+
+        // Assert
+        Assert.Equal(esperado, resultado);
+    }
+}
+```
+
+### Vantagens do TDD
+
+1. **Código mais Limpo e Melhor Projetado:**
+   - Escrever testes antes do código força a pensar sobre a interface e o design da classe/método.
+
+2. **Maior Confiança nas Mudanças:**
+   - Com uma suíte de testes robusta, você pode refatorar o código com a confiança de que não está introduzindo bugs.
+
+3. **Documentação Viva:**
+   - Testes servem como uma forma de documentação que mostra como o código deve se comportar.
+
+4. **Redução de Bugs:**
+   - Testes ajudam a capturar erros antes que o código chegue à produção.
+
+### Conclusão
+
+Implementar TDD e testes unitários no .NET Core com xUnit é uma prática poderosa para blindar seu código contra regressões e garantir alta qualidade. Seguindo os passos descritos, você pode começar a aplicar TDD em seus projetos, resultando em um desenvolvimento mais seguro e eficiente.
